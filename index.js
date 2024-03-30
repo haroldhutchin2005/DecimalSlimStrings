@@ -1,15 +1,21 @@
 const express = require('express');
 const axios = require('axios');
+const url = require('url');
 
 const app = express();
 
 // Define route
 app.get('/web', async (req, res) => {
-    const websiteUrl = req.query.url; // Assuming the URL is passed as a query parameter
+    let websiteUrl = req.query.url; // Assuming the URL is passed as a query parameter
 
     // Check if the URL parameter is missing
     if (!websiteUrl) {
         return res.status(400).send('Missing parameters: Please provide a URL to check.');
+    }
+
+    // Check if the URL has a protocol, if not, prepend "https://"
+    if (!url.parse(websiteUrl).protocol) {
+        websiteUrl = `https://${websiteUrl}`;
     }
 
     try {
